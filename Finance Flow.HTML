@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Flow</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            color: #343a40;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .transactions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .transactions li {
+            padding: 10px;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary p {
+            font-size: 1.2em;
+            color: #495057;
+        }
+
+        .balance {
+            font-size: 1.2em;
+            color: #495057;
+            transition: color 0.3s ease;
+        }
+
+        .positive {
+            color: green;
+        }
+
+        .negative {
+            color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .share-button {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .share-button:hover {
+            background-color: #1DA75A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Finance Flow Dashboard</h1>
+        <div class="controls">
+            <div class="error-message" id="errorMessage">Please fill out all fields with valid data.</div>
+            <input type="text" id="name" placeholder="Your Name">
+            <input type="text" id="description" placeholder="Description">
+            <input type="number" id="amount" placeholder="Amount">
+            <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+            <button onclick="addTransaction()">Add Transaction</button>
+            <button onclick="clearAllData()">Clear All</button>
+        </div>
+        <div class="transactions">
+            <h2>Transactions</h2>
+            <ul id="transactionList"></ul>
+        </div>
+        <div class="summary">
+            <h2>Summary</h2>
+            <p>Total Income: <span id="totalIncome">0</span> KES</p>
+            <p>Total Expenses: <span id="totalExpenses">0</span> KES</p>
+            <p>Balance: <span id="balance" class="balance">0</span> KES</p>
+        </div>
+        <button class="share-button" onclick="shareSummary()">Share Summary via WhatsApp</button>
+    </div>
+    <script>
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function addTransaction() {
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (name.trim() === '' || description.trim() === '' || isNaN(amount)) {
+                errorMessage.style.display = 'block';
+                return;
+            } else {
+                errorMessage.style.display = 'none';
+            }
+
+            const transaction = {
+                name,
+                description,
+                amount: type === 'income' ? amount : -amount,
+                type
+            };
+
+            transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateUI();
+
+            // Reset form fields
+            document.getElementById('name').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('type').value = 'income';
+        }
+
+        function updateUI() {
+            const transactionList = document.getElementById('transactionList');
+            const totalIncomeEl = document.getElementById('totalIncome');
+            const totalExpensesEl = document.getElementById('totalExpenses');
+            const balanceEl = document.getElementById('balance');
+
+            transactionList.innerHTML = '';
+            let totalIncome = 0;
+            let totalExpenses = 0;
+
+            transactions.forEach((transaction, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${transaction.name} - ${transaction.description} (${transaction.type}): KES ${Math.abs(transaction.amount)}`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => {
+                    transactions.splice(index, 1);
+                    localStorage.setItem('transactions', JSON.stringify(transactions));
+                    updateUI();
+                };
+                listItem.appendChild(deleteButton);
+                transactionList.appendChild(listItem);
+
+                if (transaction.amount > 0) {
+                    totalIncome += transaction.amount;
+                } else {
+                    totalExpenses += transaction.amount;
+                }
+            });
+
+            totalIncomeEl.textContent = totalIncome;
+            totalExpensesEl.textContent = Math.abs(totalExpenses);
+            balanceEl.textContent = totalIncome + totalExpenses;
+
+            if (totalIncome + totalExpenses >= 0) {
+                balanceEl.classList.remove('negative');
+                balanceEl.classList.add('positive');
+            } else {
+                balanceEl.classList.remove('positive');
+                balanceEl.classList.add('negative');
+            }
+        }
+
+        function clearAllData() {
+            transactions = [];
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateUI();
+        }
+
+        function shareSummary() {
+            const totalIncome = document.getElementById('totalIncome').textContent;
+            const totalExpenses = document.getElementById('totalExpenses').textContent;
+            const balance = document.getElementById('balance').textContent;
+
+            let transactionDetails = transactions.map(t => `${t.name} - ${t.description} (${t.type}): KES ${Math.abs(t.amount)}`).join('\n');
+
+            const message = `Finance Flow Summary:\n\nTotal Income: KES ${totalIncome}\nTotal Expenses: KES ${totalExpenses}\nBalance: KES ${balance}\n\nTransactions:\n${transactionDetails}`;
+
+            // Share via WhatsApp
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // Share via other platforms (for example, email)
+            const mailtoUrl = `mailto:?subject=Finance Flow Summary&body=${encodeURIComponent(message)}`;
+            window.open(mailtoUrl, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', updateUI);
+    </script>
+</body>
+</html>
