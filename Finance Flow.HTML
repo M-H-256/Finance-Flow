@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
- <style>        
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <style>        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e9ecef;
@@ -138,7 +139,7 @@
         .auth-buttons.signed-in .signed-out {
             display: none;
         }
-</style>
+    </style>
 </head>
 <body>
     <div class="auth-buttons signed-out">
@@ -276,62 +277,65 @@
         document.addEventListener('DOMContentLoaded', updateUI);
     </script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+       <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD86e1Njb9W3mhyrc0ag2zLT6uO5puscFM",
+    authDomain: "financeflowauth.firebaseapp.com",
+    projectId: "financeflowauth",
+    storageBucket: "financeflowauth.firebasestorage.app",
+    messagingSenderId: "709439647643",
+    appId: "1:709439647643:web:3ff136ee113797d565bb3e"
+  };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const provider = new GoogleAuthProvider();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
-        // Handle Sign In
-        const userSignIn = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                console.log("User signed in:", result.user);
-            } catch (error) {
-                console.error(`Error [${error.code}]: ${error.message}`);
-                alert(`Error: ${error.message}`);
-            }
-        };
+  const signInButton = document.getElementById('signInButton');
+  const signOutButton = document.getElementById('signOutButton');
 
-        // Handle Sign Out
-        const userSignOut = async () => {
-            try {
-                await signOut(auth);
-                alert('Signed Out');
-            } catch (error) {
-                console.error(`Error [${error.code}]: ${error.message}`);
-            }
-        };
+  const userSignIn = async() => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`Error [${errorCode}]: ${errorMessage}`);
+        alert(`Error: ${errorMessage}`);
+  });
+}
 
-        // Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                alert('User is signed in');
-                document.querySelector('.auth-buttons').classList.add('signed-in');
-            } else {
-                alert('User is signed out');
-                document.querySelector('.auth-buttons').classList.remove('signed-in');
-            }
-        });
 
-        // Event Listeners
-        const signInButton = document.getElementById('signInButton');
-        const signOutButton = document.getElementById('signOutButton');
-        signInButton.addEventListener('click', userSignIn);
-        signOutButton.addEventListener('click', userSignOut);
-    </script>
+    const userSignOut = async() => {
+        signOut(auth).then(() => {
+        alert('Signed Out');
+        }).catch((error) => {});
+    }
+    
+    
+    
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+        alert('User is signed in');
+        document.querySelector('.auth-buttons').classList.add('signed-in');
+        } else {
+        alert('User is signed out');
+        document.querySelector('.auth-buttons').classList.remove('signed-in');
+        }
+    });
+    signInButton.addEventListener('click', userSignIn);
+    signOutButton.addEventListener('click', userSignOut);
+
+</script>
 </body>
 </html>
