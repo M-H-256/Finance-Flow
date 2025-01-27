@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-    <style>        
-        body {
+    <style>
+body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e9ecef;
             display: flex;
@@ -172,10 +172,69 @@
         </div>
         <button class="share-button" onclick="shareSummary()">Share Summary via WhatsApp</button>
     </div>
-    <script>
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD86e1Njb9W3mhyrc0ag2zLT6uO5puscFM",
+            authDomain: "financeflowauth.firebaseapp.com",
+            projectId: "financeflowauth",
+            storageBucket: "financeflowauth.appspot.com",
+            messagingSenderId: "709439647643",
+            appId: "1:709439647643:web:3ff136ee113797d565bb3e"
+        };
 
-        function addTransaction() {
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+        const db = getFirestore(app);
+
+        const signInButton = document.getElementById('signInButton');
+        const signOutButton = document.getElementById('signOutButton');
+
+        const userSignIn = async() => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log(user);
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error(`Error [${errorCode}]: ${errorMessage}`);
+                    alert(`Error: ${errorMessage}`);
+            });
+        }
+
+        const userSignOut = async() => {
+            signOut(auth).then(() => {
+                alert('Signed Out');
+            }).catch((error) => {});
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                alert('User is signed in');
+                document.querySelector('.auth-buttons').classList.add('signed-in');
+                updateUI();
+            } else {
+                alert('User is signed out');
+                document.querySelector('.auth-buttons').classList.remove('signed-in');
+                transactions = [];
+                updateUI();
+            }
+        });
+
+        signInButton.addEventListener('click', userSignIn);
+        signOutButton.addEventListener('click', userSignOut);
+
+        let transactions = [];
+
+        async function addTransaction() {
             const name = document.getElementById('name').value;
             const description = document.getElementById('description').value;
             const amount = parseFloat(document.getElementById('amount').value);
@@ -199,18 +258,15 @@
                 type
             };
 
-            transactions.push(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            updateUI();
-
-            // Reset form fields
-            document.getElementById('name').value = '';
-            document.getElementById('description').value = '';
-            document.getElementById('amount').value = '';
-            document.getElementById('type').value = 'income';
+            try {
+                await addDoc(collection(db, 'transactions'), transaction);
+                updateUI();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
         }
 
-        function updateUI() {
+        async function updateUI() {
             const transactionList = document.getElementById('transactionList');
             const totalIncomeEl = document.getElementById('totalIncome');
             const totalExpensesEl = document.getElementById('totalExpenses');
@@ -220,15 +276,20 @@
             let totalIncome = 0;
             let totalExpenses = 0;
 
+            const querySnapshot = await getDocs(collection(db, 'transactions'));
+            transactions = [];
+            querySnapshot.forEach((doc) => {
+                transactions.push({...doc.data(), id: doc.id });
+            });
+
             transactions.forEach((transaction, index) => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${transaction.name} - ${transaction.description} (${transaction.type}): KES ${Math.abs(transaction.amount)}`;
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
-                deleteButton.onclick = () => {
-                    transactions.splice(index, 1);
-                    localStorage.setItem('transactions', JSON.stringify(transactions));
+                deleteButton.onclick = async () => {
+                    await deleteDoc(doc(db, 'transactions', transaction.id));
                     updateUI();
                 };
                 listItem.appendChild(deleteButton);
@@ -254,9 +315,11 @@
             }
         }
 
-        function clearAllData() {
-            transactions = [];
-            localStorage.setItem('transactions', JSON.stringify(transactions));
+        async function clearAllData() {
+            const querySnapshot = await getDocs(collection(db, 'transactions'));
+            querySnapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+            });
             updateUI();
         }
 
@@ -267,75 +330,12 @@
 
             let transactionDetails = transactions.map(t => `${t.name} - ${t.description} (${t.type}): KES ${Math.abs(t.amount)}`).join('\n');
 
-            const message = `Finance Flow Summary:\n\nTotal Income: KES ${totalIncome}\nTotal Expenses: KES ${totalExpenses}\nBalance: KES ${balance}\n\nTransactions:\n${transactionDetails}`;
-
-            // Share via WhatsApp
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            const message = `Finance[_{{{CITATION{{{_1{](https://github.com/thikorn/myProjectFinal/tree/3db714859e1bde70142cc6e2057f9dae2b2b5665/personalin.php)
+ const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
 
         document.addEventListener('DOMContentLoaded', updateUI);
     </script>
-
-       <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyD86e1Njb9W3mhyrc0ag2zLT6uO5puscFM",
-  authDomain: "financeflowauth.firebaseapp.com",
-  projectId: "financeflowauth",
-  storageBucket: "financeflowauth.firebasestorage.app",
-  messagingSenderId: "709439647643",
-  appId: "1:709439647643:web:3ff136ee113797d565bb3e"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  const signInButton = document.getElementById('signInButton');
-  const signOutButton = document.getElementById('signOutButton');
-
-  const userSignIn = async() => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        console.log(user);
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(`Error [${errorCode}]: ${errorMessage}`);
-        alert(`Error: ${errorMessage}`);
-  });
-}
-
-
-    const userSignOut = async() => {
-        signOut(auth).then(() => {
-        alert('Signed Out');
-        }).catch((error) => {});
-    }
-    
-    
-    
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-        alert('User is signed in');
-        document.querySelector('.auth-buttons').classList.add('signed-in');
-        } else {
-        alert('User is signed out');
-        document.querySelector('.auth-buttons').classList.remove('signed-in');
-        }
-    });
-    signInButton.addEventListener('click', userSignIn);
-    signOutButton.addEventListener('click', userSignOut);
-
-</script>
 </body>
 </html>
