@@ -4,13 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-    <style>
-        .signed-out .signed-in,
-        .signed-in .signed-out {
+ <style>        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding-top: 100px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.001);
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;;
+        }
+
+        h1, h2 {
+            color: #343a40;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor:pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .transactions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .transactions li {
+            padding: 10px;
+            border-bottom: 1px solid #ced4da;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary p {
+            font-size: 1.2em;
+            color: #495057;
+        }
+
+        .balance {
+            font-size: 1.2em;
+            color: #495057;
+            transition: color 0.3s ease;
+        }
+
+        .positive {
+            color: #01ff01b7;
+        }
+
+        .negative {
+            color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
             display: none;
         }
-    </style>
+
+        .share-button {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .share-button:hover {
+            background-color: #1DA75A;
+        }
+
+        .auth-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons button {
+            display: none;
+        }
+
+        .auth-buttons .signed-out {
+            display: inline-block;
+        }
+
+        .auth-buttons.signed-in .signed-in {
+            display: inline-block;
+        }
+
+        .auth-buttons.signed-in .signed-out {
+            display: none;
+        }
+</style>
 </head>
 <body>
     <div class="auth-buttons signed-out">
@@ -43,95 +171,10 @@
         </div>
         <button class="share-button" onclick="shareSummary()">Share Summary via WhatsApp</button>
     </div>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+    <script>
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // Initialize Firestore
-        const db = getFirestore(app);
-        syncTransactions();
-
-        // Firestore Collection
-        const transactionsCollection = collection(db, "transactions");
-
-        async function addTransactionToFirestore(transaction) {
-            try {
-                await addDoc(transactionsCollection, transaction);
-            } catch (error) {
-                console.error("Error adding transaction: ", error);
-            }
-        }
-
-        function syncTransactions() {
-            onSnapshot(transactionsCollection, (snapshot) => {
-                transactions = [];
-                snapshot.forEach((doc) => {
-                    transactions.push(doc.data());
-                });
-                updateUI();
-            });
-        }
-
-        // Handle Sign In
-        const userSignIn = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                console.log("User signed in:", result.user);
-            } catch (error) {
-                console.error(`Error [${error.code}]: ${error.message}`);
-                alert(`Error: ${error.message}`);
-            }
-        };
-
-        // Handle Sign Out
-        const userSignOut = async () => {
-            try {
-                await signOut(auth);
-                alert('Signed Out');
-            } catch (error) {
-                console.error(`Error [${error.code}]: ${error.message}`);
-            }
-        };
-
-        // Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                alert('User is signed in');
-                document.querySelector('.auth-buttons').classList.add('signed-in');
-                document.querySelector('.auth-buttons').classList.remove('signed-out');
-            } else {
-                alert('User is signed out');
-                document.querySelector('.auth-buttons').classList.add('signed-out');
-                document.querySelector('.auth-buttons').classList.remove('signed-in');
-            }
-        });
-
-        // Event Listeners
-        const signInButton = document.getElementById('signInButton');
-        const signOutButton = document.getElementById('signOutButton');
-        signInButton.addEventListener('click', userSignIn);
-        signOutButton.addEventListener('click', userSignOut);
-
-        // Transactions Functions
-        let transactions = [];
-
-        async function addTransaction() {
+        function addTransaction() {
             const name = document.getElementById('name').value;
             const description = document.getElementById('description').value;
             const amount = parseFloat(document.getElementById('amount').value);
@@ -155,7 +198,9 @@
                 type
             };
 
-            await addTransactionToFirestore(transaction);
+            transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateUI();
 
             // Reset form fields
             document.getElementById('name').value = '';
@@ -181,9 +226,8 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.onclick = () => {
-                    // Remove the transaction from Firestore
-                    // Write code to delete the document from Firestore here
                     transactions.splice(index, 1);
+                    localStorage.setItem('transactions', JSON.stringify(transactions));
                     updateUI();
                 };
                 listItem.appendChild(deleteButton);
@@ -211,8 +255,7 @@
 
         function clearAllData() {
             transactions = [];
-            // Clear transactions from Firestore
-            // Write code to clear all documents in the "transactions" collection here
+            localStorage.setItem('transactions', JSON.stringify(transactions));
             updateUI();
         }
 
@@ -231,6 +274,64 @@
         }
 
         document.addEventListener('DOMContentLoaded', updateUI);
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+
+        // Handle Sign In
+        const userSignIn = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log("User signed in:", result.user);
+            } catch (error) {
+                console.error(`Error [${error.code}]: ${error.message}`);
+                alert(`Error: ${error.message}`);
+            }
+        };
+
+        // Handle Sign Out
+        const userSignOut = async () => {
+            try {
+                await signOut(auth);
+                alert('Signed Out');
+            } catch (error) {
+                console.error(`Error [${error.code}]: ${error.message}`);
+            }
+        };
+
+        // Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                alert('User is signed in');
+                document.querySelector('.auth-buttons').classList.add('signed-in');
+            } else {
+                alert('User is signed out');
+                document.querySelector('.auth-buttons').classList.remove('signed-in');
+            }
+        });
+
+        // Event Listeners
+        const signInButton = document.getElementById('signInButton');
+        const signOutButton = document.getElementById('signOutButton');
+        signInButton.addEventListener('click', userSignIn);
+        signOutButton.addEventListener('click', userSignOut);
     </script>
 </body>
 </html>
