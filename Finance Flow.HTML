@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
-    <style>
+    <style>        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e9ecef;
             display: flex;
             justify-content: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding-top: 100px;
         }
 
         .container {
             background-color: #ffffff;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.001);
             border-radius: 10px;
             max-width: 600px;
-            width: 100%;
+            width: 100%;;
         }
 
         h1, h2 {
@@ -46,7 +49,7 @@
         button {
             background-color: #007bff;
             color: white;
-            cursor: pointer;
+            cursor:pointer;
         }
 
         button:hover {
@@ -79,7 +82,7 @@
         }
 
         .positive {
-            color: green;
+            color: #01ff01b7;
         }
 
         .negative {
@@ -101,7 +104,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 20px;
             transition: background-color 0.3s ease;
             margin-top: 20px;
             text-align: center;
@@ -111,16 +114,44 @@
         .share-button:hover {
             background-color: #1DA75A;
         }
+
+        .auth-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons button {
+            display: none;
+        }
+
+        .auth-buttons .signed-out {
+            display: inline-block;
+        }
+
+        .auth-buttons.signed-in .signed-in {
+            display: inline-block;
+        }
+
+        .auth-buttons.signed-in .signed-out {
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div class="auth-buttons signed-out">
+        <button class="signed-out" id="signInButton">Sign in</button>
+        <button class="signed-in" id="signOutButton">Sign out</button>
+    </div>
     <div class="container">
         <h1>Finance Flow Dashboard</h1>
         <div class="controls">
             <div class="error-message" id="errorMessage">Please fill out all fields with valid data.</div>
             <input type="text" id="name" placeholder="Your Name">
-            <input type="text" id="description" placeholder="Description">
-            <input type="number" id="amount" placeholder="Amount">
+            <input type="text" id="description" placeholder="Source/Purpose">
+            <input type="number" id="amount" placeholder="Amount" onkeydown="if (event.key === 'Enter'){addTransaction()}">
             <select id="type">
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
@@ -152,6 +183,9 @@
 
             if (name.trim() === '' || description.trim() === '' || isNaN(amount)) {
                 errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000); // Hide error message after 3 seconds
                 return;
             } else {
                 errorMessage.style.display = 'none';
@@ -237,13 +271,68 @@
             // Share via WhatsApp
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
-
-            // Share via other platforms (for example, email)
-            const mailtoUrl = `mailto:?subject=Finance Flow Summary&body=${encodeURIComponent(message)}`;
-            window.open(mailtoUrl, '_blank');
         }
 
         document.addEventListener('DOMContentLoaded', updateUI);
     </script>
+
+       <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD86e1Njb9W3mhyrc0ag2zLT6uO5puscFM",
+    authDomain: "financeflowauth.firebaseapp.com",
+    projectId: "financeflowauth",
+    storageBucket: "financeflowauth.firebasestorage.app",
+    messagingSenderId: "709439647643",
+    appId: "1:709439647643:web:3ff136ee113797d565bb3e"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
+  const signInButton = document.getElementById('signInButton');
+  const signOutButton = document.getElementById('signOutButton');
+
+  const userSignIn = async() => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+  })
+}
+
+    const userSignOut = async() => {
+        signOut(auth).then(() => {
+        alert('Signed Out');
+        }).catch((error) => {});
+    }
+    
+    
+    
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+        alert('User is signed in');
+        document.querySelector('.auth-buttons').classList.add('signed-in');
+        } else {
+        alert('User is signed out');
+        document.querySelector('.auth-buttons').classList.remove('signed-in');
+        }
+    });
+    signInButton.addEventListener('click', userSignIn);
+    signOutButton.addEventListener('click', userSignOut);
+    
+</script>
 </body>
 </html>
