@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <style>
+        .signed-out .signed-in,
+        .signed-in .signed-out {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-buttons signed-out">
@@ -54,14 +60,14 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
+        const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
         // Initialize Firestore
         const db = getFirestore(app);
         syncTransactions();
 
-        // Functions for Firestore
+        // Firestore Collection
         const transactionsCollection = collection(db, "transactions");
 
         async function addTransactionToFirestore(transaction) {
@@ -108,8 +114,10 @@
             if (user) {
                 alert('User is signed in');
                 document.querySelector('.auth-buttons').classList.add('signed-in');
+                document.querySelector('.auth-buttons').classList.remove('signed-out');
             } else {
                 alert('User is signed out');
+                document.querySelector('.auth-buttons').classList.add('signed-out');
                 document.querySelector('.auth-buttons').classList.remove('signed-in');
             }
         });
@@ -121,7 +129,7 @@
         signOutButton.addEventListener('click', userSignOut);
 
         // Transactions Functions
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let transactions = [];
 
         async function addTransaction() {
             const name = document.getElementById('name').value;
@@ -173,8 +181,9 @@
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.onclick = () => {
+                    // Remove the transaction from Firestore
+                    // Write code to delete the document from Firestore here
                     transactions.splice(index, 1);
-                    localStorage.setItem('transactions', JSON.stringify(transactions));
                     updateUI();
                 };
                 listItem.appendChild(deleteButton);
@@ -202,13 +211,14 @@
 
         function clearAllData() {
             transactions = [];
-            localStorage.setItem('transactions', JSON.stringify(transactions));
+            // Clear transactions from Firestore
+            // Write code to clear all documents in the "transactions" collection here
             updateUI();
         }
 
         function shareSummary() {
             const totalIncome = document.getElementById('totalIncome').textContent;
- const totalExpenses = document.getElementById('totalExpenses').textContent;
+            const totalExpenses = document.getElementById('totalExpenses').textContent;
             const balance = document.getElementById('balance').textContent;
 
             let transactionDetails = transactions.map(t => `${t.name} - ${t.description} (${t.type}): KES ${Math.abs(t.amount)}`).join('\n');
@@ -224,4 +234,3 @@
     </script>
 </body>
 </html>
-           
