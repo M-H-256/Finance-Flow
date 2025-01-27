@@ -5,141 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Flow</title>
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
-<style>        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
-            display: flex;
-            justify-content: center;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding-top: 100px;
-        }
-
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.001);
-            border-radius: 10px;
-            max-width: 600px;
-            width: 100%;;
-        }
-
-        h1, h2 {
-            color: #343a40;
-            text-align: center;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        input, select, button {
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            cursor:pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .transactions ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .transactions li {
-            padding: 10px;
-            border-bottom: 1px solid #ced4da;
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .summary p {
-            font-size: 1.2em;
-            color: #495057;
-        }
-
-        .balance {
-            font-size: 1.2em;
-            color: #495057;
-            transition: color 0.3s ease;
-        }
-
-        .positive {
-            color: #01ff01b7;
-        }
-
-        .negative {
-            color: red;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: -10px;
-            margin-bottom: 10px;
-            display: none;
-        }
-
-        .share-button {
-            background-color: #25D366;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .share-button:hover {
-            background-color: #1DA75A;
-        }
-
-        .auth-buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .auth-buttons button {
-            display: none;
-        }
-
-        .auth-buttons .signed-out {
-            display: inline-block;
-        }
-
-        .auth-buttons.signed-in .signed-in {
-            display: inline-block;
-        }
-
-        .auth-buttons.signed-in .signed-out {
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <div class="auth-buttons signed-out">
@@ -343,7 +208,7 @@
 
         function shareSummary() {
             const totalIncome = document.getElementById('totalIncome').textContent;
-            const totalExpenses = document.getElementById('totalExpenses').textContent;
+ const totalExpenses = document.getElementById('totalExpenses').textContent;
             const balance = document.getElementById('balance').textContent;
 
             let transactionDetails = transactions.map(t => `${t.name} - ${t.description} (${t.type}): KES ${Math.abs(t.amount)}`).join('\n');
@@ -359,3 +224,4 @@
     </script>
 </body>
 </html>
+           
