@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body class="body2">
+    <div class="container2">
+        <h1>Sign In</h1>
+        <div class="controls">
+            <div class="input-wrapper">
+                <input type="text" id="signin-username" placeholder=" ">
+                <span class="placeholder">Username</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="password" id="signin-password" placeholder=" ">
+                <span class="placeholder">Password</span>
+            </div>
+            <button onclick="signIn()">Sign In</button>
+            <div class="error-message" id="signin-error">Invalid username or password.</div>
+        </div>
+        <div class="signup-text">
+            <h3><a href="signup.html">New User? Sign Up</a></h3>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Delete Account</title>
+        <link rel="stylesheet" href="Style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script> <!-- Add this line -->
+    </head>
+<body class="body2">
+    <div class="container2">
+        <h1>Delete Account</h1>
+        <div class="controls">
+            <div class="input-wrapper">
+                <input type="password" id="delete-password" placeholder=" ">
+                <span class="placeholder">Enter Password</span>
+            </div>
+            <button type="button" onclick="deleteAccount()">Delete Account</button>
+            <div class="error-message" id="delete-error">Incorrect password.</div>
+        </div>
+        <div  class="signup-text">
+            <h3><a href="dashboard.html">Cancel </a></h3>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

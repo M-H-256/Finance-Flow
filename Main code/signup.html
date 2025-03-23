@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body class="body2">
+    <div class="container2">
+        <h1>Sign Up</h1>
+        <div class="controls">
+            <div class="input-wrapper">
+                <input type="text" id="signup-username" placeholder=" ">
+                <span class="placeholder">Username</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="password" id="signup-password" placeholder=" ">
+                <span class="placeholder">Password</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="password" id="signup-confirm-password" placeholder=" ">
+                <span class="placeholder">Confirm Password</span>
+            </div>
+            <button onclick="signUp()">Sign Up</button>
+            <div class="error-message" id="signup-error">Username already exists.</div>
+        </div>
+        <div class="signup-text">
+            <h3><a href="signin.html">Already a user? Sign In</a></h3>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

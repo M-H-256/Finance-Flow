@@ -1,0 +1,315 @@
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideIn {
+    0% { transform: translateY(-50px); }
+    100% { transform: translateY(0); }
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 30px;
+    padding-top: 50px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 3s ease-in-out forwards, slideIn 2s ease-in-out forwards;
+    margin-top: 20px;
+    width: 600px;
+    min-height: 100vh;
+scroll-margin-top: 50px;
+}
+
+.container2 {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(43, 40, 40, 0.512);
+    padding: 30px;
+    border-radius: 25px;
+    width: 350px;
+    height: 450px;
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 3s ease-in-out forwards, slideIn 2s ease-in-out forwards;
+}
+
+.container3 {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(43, 40, 40, 0.512);
+    padding: 30px;
+    border-radius: 25px;
+    width: 600px;
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 3s ease-in-out forwards, slideIn 2s ease-in-out forwards;
+    margin: auto;
+    margin-top: 20px;
+}
+
+body {
+    background: url('background.JPEG') no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    display: flex;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    min-height: 100vh;
+    animation: fadeIn 3s ease-in-out forwards;
+}
+
+.body2 {
+    background: url('background.JPEG') no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 800px;
+    animation: fadeIn 3s ease-in-out forwards;
+}
+
+.sign-out-button {
+    background-color: #ff0000;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.5s ease, transform 0.4s ease;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+}
+
+.sign-out-button:hover {
+    background-color: #727272;
+    transform: scale(1.2);
+}
+
+h1, h2 {
+    color: #333333;
+    text-align: center;
+    font-family: 'Arial Black', sans-serif;
+    animation: slideIn 2s ease-in-out forwards;
+}
+
+.controls, .report-controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 2s ease-in-out forwards;
+    border: 0px;
+    border-radius: 20px;
+}
+
+input[type="text"], input[type="password"], select, input[type="number"] {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: background-color 0.5s ease;
+    position: relative;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, select:focus, input[type="number"]:focus {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.input-wrapper, .controls {
+    width: 100%;
+}
+
+input[type="text"], input[type="password"], input[type="number"], select {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgb(255, 255, 255);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: background-color 0.5s ease;
+    width: 100%; /* Make the elements use the full width */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    position: relative;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, select:focus {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.placeholder {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+input:focus + .placeholder,
+input:not(:placeholder-shown) + .placeholder,
+input.has-value + .placeholder {
+    top: -15px;
+    left: 15px;
+    font-size: 12px;
+    color: #333;
+}
+
+select {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: background-color 0.5s ease;
+    width: 100%; /* Make the select element use the full width */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    position: relative;
+}
+
+select:focus {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+button {
+    background-color: #333333;
+    color: white;
+    cursor: pointer;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+    font-size: 18px;
+    border-radius: 20px;
+    padding: 12px 24px;
+    transition: background-color 0.5s ease, transform 0.4s ease;
+}
+
+button:hover {
+    background-color: #727272;
+    transform: scale(1.2);
+}
+
+.signup-text {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.signup-text h3 a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.signup-text h3 a:hover {
+    color: #878787; 
+    transform: scale(1.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+    align-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    width: 565px;
+
+}
+
+th, td {
+    border: 2px solid #797979;
+    padding: 12px;
+    text-align: center;
+    color: #ffffff;
+}
+
+th {
+    background-color: #ffffff;
+    color: #090909;
+    font-size: 16px;
+}
+
+.summary-item {
+    font-size: 1.2em;
+    color: #fbfbfb;
+    margin-top: 10px;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+    font-weight: bold;
+}
+
+.balance {
+    font-size: 1.5em;
+    transition: color 0.5s ease;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+}
+
+.positive {
+    color: #01ff01b7;
+}
+
+.negative {
+    color: red;
+}
+
+.error-message {
+    color: rgb(255, 0, 0);
+    font-size: 1em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+}
+
+.share-button {
+    background-color: #333333;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.5s ease, transform 0.4s ease;
+    margin-top: 20px;
+    text-align: center;
+    display: inline-block;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+}
+
+.share-button:hover{
+    background-color: #727272;
+    transform: scale(1.2);
+}
+
+.delete-account-button {
+    background-color: #333333;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.5s ease, transform 0.4s ease;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    animation: fadeIn 2s ease-in-out forwards, slideIn 1.5s ease-in-out forwards;
+}
+
+.delete-account-button:hover {
+    background-color: #727272;
+    transform: scale(1.2);
+}

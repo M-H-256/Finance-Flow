@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Records</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="body2">
+    <div class="container3">
+        <h1>Monthly Records</h1>
+        <div class="controls">
+            <label for="yearSelect">Select Year:</label>
+            <input type="number" id="yearSelect" value="2025" min="2000" max="2100" onkeydown="handleYearChange(event)">
+            <label for="monthSelect">Select Month:</label>
+            <select id="monthSelect" onchange="fetchRecords()">
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="transactions">
+            <h2>Records for <span id="selectedMonth"></span> <span id="selectedYear"></span></h2>
+            <table id="recordsTable" class="transactiontable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Receipt No</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsList"></tbody>
+            </table>
+        </div>
+        <div class="summary">
+            <h2>Monthly Summary</h2>
+            <div class="summary-item">Total Income: <span id="totalIncomeSummary">0</span> KES</div>
+            <br>
+            <div class="summary-item">Total Expenses: <span id="totalExpensesSummary">0</span> KES</div>
+            <br>
+            <div class="summary-item">Balance: <span id="balanceSummary" class="balance">0</span> KES</div>
+            <br>
+        </div>
+        <div class="controls">
+            <button onclick="location.href='dashboard.html'">Back To Dashboard</button>
+            <button onclick="shareMonthlySummary()">Share via WhatsApp</button>
+            <span id="yearIndicator" style="display: none; color: red;">Year changed</span>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

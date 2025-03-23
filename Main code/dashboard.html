@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Flow Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button onclick="signOut()" class="sign-out-button">Sign Out</button>
+            <button onclick="location.href='delete_account.html'" class="delete-account-button">Delete Account</button>
+            <h1>Finance Flow Dashboard</h1>
+        </div>
+        <div class="welcome-message">
+            Welcome, <span id="usernameDisplay"></span>!
+        </div>
+        <br>
+        <div class="controls">
+            <div class="error-message" id="errorMessage">Please fill out all fields with valid data.</div>
+            <div class="input-wrapper">
+                <input type="text" id="receiptNo" placeholder=" ">
+                <span class="placeholder">Receipt Number</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="text" id="description" placeholder=" ">
+                <span class="placeholder">Source/Purpose</span>
+            </div>
+            <div class="input-wrapper">
+                <input type="number" id="amount" placeholder=" " onkeydown="if (event.key === 'Enter'){addTransaction()}">
+                <span class="placeholder">Amount</span>
+            </div>
+            <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+            <button onclick="addTransaction()">Add Transaction</button>
+            <button id="clearTransactionsButton">Clear All Transactions</button>
+        </div>
+        <div class="transactions">
+            <h2>Transactions</h2>
+            <table id="transactionTable" class="transactiontable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Receipt No</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionList"></tbody>
+            </table>
+        </div>
+        <div class="summary">
+            <h2>Summary</h2>
+            <div class="summary-item">Total Income: <span id="totalIncome">0</span> KES</div>
+            <br>
+            <div class="summary-item">Total Expenses: <span id="totalExpenses">0</span> KES</div>
+            <br>
+            <div class="summary-item">Balance: <span id="balance" class="balance">0</span> KES</div>
+            <br>
+        </div>
+        <div class="report-controls">
+            <button onclick="location.href='records.html'">View Monthly Records</button>
+            <button onclick="location.href='yearly_reports.html'">View Yearly Reports</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
